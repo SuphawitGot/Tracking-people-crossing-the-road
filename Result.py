@@ -1,47 +1,38 @@
 from ultralytics import YOLO
 import cv2
+import time
 
-
-# load yolov8 model
-model = YOLO('runs\\detect\\train12\\weights\\best.pt')
-
-# load video
+model = YOLO('yolov8n.pt')
 cap = cv2.VideoCapture(0)
 
-ret = True
-# read frames
-while ret:
+# 1. Start a "stopwatch" before the loop begins
+last_print_time = time.time()
+
+while True:
     ret, frame = cap.read()
+    if not ret:
+        break
 
-    if ret:
+    results = model(frame, classes=[0], verbose=False)
+    annotated = results[0].plot()
+    
+    cv2.imshow('Person Detection', annotated)
 
-        # detect objects
-        # track objects
-        results = model.track(frame, persist=True)
-
-        # plot results
-        # cv2.rectangle
-        # cv2.putText
-        frame_ = results[0].plot()
-
-        # visualize
-        cv2.imshow('frame', frame_)
-        if cv2.waitKey(25) & 0xFF == ord('q'):
-            break
+    for r in results:
+        people_count = len(r.boxes) 
+        
+        # 2. Check the current time on the clock
+        current_time = time.time()
+        
+        # 3. If the difference is 2 seconds or more, print the text!
+        if current_time - last_print_time >= 2.0:
+            print(f"People count: {people_count}")
             
+            # 4. Reset the stopwatch
+            last_print_time = current_time 
+        
+    if cv2.waitKey(1) & 0xFF == 27:
+        break
+
 cap.release()
 cv2.destroyAllWindows()
-
-
-
-
-''' from ultralytics import YOLO
-
-# 1. Load YOUR custom trained model instead of the base model
-model = YOLO(r"runs\\detect\\train9\\weights\\best.pt") 
-
-# 2. Perform object detection on a new image
-results = model(r"D:\\Github repo\\PROJECT\AI\\computer vision\\japan-tokyo-shibuya-japanese-preview.jpg") 
-
-# 3. Display the results
-results[0].show() '''
