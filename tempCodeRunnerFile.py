@@ -1,1 +1,2 @@
-Building Counter
+
+model = YOLO("yolov8n.pt")
