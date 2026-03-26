@@ -7,7 +7,8 @@ import numpy as np
 cap = cv2.VideoCapture('crosswalk.mp4')
 mask = cv2.imread('mask.png')
 model = YOLO("yolov8n.pt")
-crosswalk_zone = np.array([[0, 620], [1100, 540], [1500, 800], [0, 950]], np.int32)   # Define the 4 corners of the crosswalk [Top-Left, Top-Right, Bottom-Right, Bottom-Left]
+crosswalk_zone = np.array([[60, 700], [750, 550], [1100, 550], [300, 850]], np.int32) # Define the 4 corners of the crosswalk [Top-Left, Top-Right, Bottom-Right, Bottom-Left]
+
 
 while True:
     success, img = cap.read()
@@ -36,7 +37,7 @@ while True:
     
     
     if people_in_crosswalk > 0:
-        cv2.putText(img,"Red Light",(50,50),cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 0), 3)
+        cv2.putText(img,"Red Light",(50,50),cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 255), 3)
     else:
         cv2.putText(img,"Green Light",(50,50),cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 0), 3)
     
